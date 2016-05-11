@@ -1,4 +1,4 @@
-CC = g++ -std=c99
+CC = gcc -std=c99
 OBJS = main.o utils.o
 
 CFLAGS =
@@ -9,7 +9,7 @@ LIBS =		-lpthread -lncurses
 TARGET =	ttytanks
 
 $(TARGET):	$(OBJS)
-	$(CC)  $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -o $(TARGET)
+	g++  $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -o $(TARGET)
 
 all:	$(TARGET)
 
