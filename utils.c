@@ -63,7 +63,7 @@ void tank_reswap(short n, struct tank *t)
 
 void tank_render(struct tank *t)
 {
-	char pixel = '#';
+    char pixel = '#';
 	if(t->live == 'Y')
 	{
 		switch (t->ort)
@@ -116,63 +116,88 @@ void tank_render(struct tank *t)
 		}
 }
 
-void boom_render(struct boom *b, struct tank *t1, struct tank *t2, struct tank *t3 , struct tank *t4)
+
+int boom_render(struct boom *b_bot, struct boom *b_me, struct tank *t)
 {
-	if(b->live == 'Y')
-	{
-		for(int k = 0; k < 4; k++)
-		{
-			if(abs(t1->me_x - b->me_x) <= 1 && abs(t1->me_y - b->me_y) <=1)
-				t1->live = 'N';
-			if(abs(t2->me_x - b->me_x) <= 1 && abs(t2->me_y - b->me_y) <=1)
-				t2->live = 'N';
-			if(abs(t3->me_x - b->me_x) <= 1 && abs(t3->me_y - b->me_y) <=1)
-				t3->live = 'N';
-			if(abs(t4->me_x - b->me_x) <= 1 && abs(t4->me_y - b->me_y) <=1)
-				t4->live = 'N';
-		}
+    for (unsigned char i = 0; i <= 254; i++)
+        {
+        //recalc position
+        switch (b_bot[i].ort)
+        {
+        case U_NORTH:
+            b_bot[i].me_y -= 1;
+            break;
+        case U_SOUTH:
+            b_bot[i].me_y += 1;
+            break;
+        case U_WEST:
+            b_bot[i].me_x -= 1;
+            break;
+        case U_EAST:
+            b_bot[i].me_x += 1;
+            break;
+        default:
+            break;
+        }
 
-	}
-	if(b->live == 'Y' && (b->ort == U_NORTH || b->ort == U_SOUTH))
-		mvaddch(b->me_y,   b->me_x, '#');
+        switch (b_me[i].ort)
+        {
+        case U_NORTH:
+            b_me[i].me_y -= 1;
+            break;
+        case U_SOUTH:
+            b_me[i].me_y += 1;
+            break;
+        case U_WEST:
+            b_me[i].me_x -= 1;
+            break;
+        case U_EAST:
+            b_me[i].me_x += 1;
+            break;
+        default:
+            break;
+        }
+        //calc
+            if(b_bot[i].live == 'Y' || b_me[i].live == 'Y' )
+            {
+                for(char k = 0; k < 4; k++)
+                {
+                    if(abs(t[k].me_x - b_bot[i].me_x) <= 1 && abs(t[k].me_y - b_bot[i].me_y) <=1 && t[k].live == 'Y' && b_bot[i].live == 'Y')
+                    {
+                        t[k].live = 'N';
+                        b_bot[i].live = 'N';
+                    }
+                    if(abs(t[k].me_x - b_me[i].me_x) <= 1 && abs(t[k].me_y - b_me[i].me_y) <=1 && t[k].live == 'Y' && b_me[i].live == 'Y')
+                    {
+                        t[k].live = 'N';
+                        b_me[i].live = 'N';
+                        frags++;
+                    }
+                }
+                for (unsigned char j = i; j <= 254; j++)
+                    if(b_bot[i].me_x == b_bot[j].me_x && b_bot[i].me_y == b_bot[j].me_y)
+                    {
+                        if(i!=j)
+                        {
+                            b_bot[i].live = 'N';
+                            b_bot[j].live = 'N';
+                        }
+                    }
+                for (unsigned char j = 0; j <= 254; j++)
+                    if(b_bot[i].me_x == b_me[j].me_x && b_bot[i].me_y == b_me[j].me_y)
+                    {
+                        b_bot[i].live = 'N';
+                        b_me[j].live = 'N';
+                    }
+            }
 
-	if(b->live == 'Y' && (b->ort == U_WEST || b->ort == U_EAST))
-		mvaddch(b->me_y,   b->me_x, '#');
 
+            //render
 
-	if(b->live == 'Y' && b->ort == U_NORTH)
-	{
-		b->me_y -= 1;
-		if(b->me_y < 0)
-		{
-			b->live = 'N';
-		}
-	}
+            if(b_bot[i].live == 'Y')
+                mvaddch(b_bot[i].me_y,   b_bot[i].me_x, '#');
+            if(b_me[i].live == 'Y')
+                mvaddch(b_me[i].me_y,   b_me[i].me_x, '#');
 
-	if(b->live == 'Y' && b->ort == U_SOUTH)
-	{
-		b->me_y += 1;
-		if(b->me_y > LINES)
-		{
-			b->live = 'N';
-		}
-	}
-
-	if(b->live == 'Y' && b->ort == U_WEST)
-	{
-		b->me_x -= 1;
-		if(b->me_x < 0)
-		{
-			b->live = 'N';
-		}
-	}
-
-	if(b->live == 'Y' && b->ort == U_EAST)
-	{
-		b->me_x += 1;
-		if(b->me_x > COLS)
-		{
-			b->live = 'N';
-		}
-	}
+        }
 }

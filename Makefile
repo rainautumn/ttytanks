@@ -1,3 +1,4 @@
+CC = g++ -std=c99
 OBJS = main.o utils.o
 
 CFLAGS =

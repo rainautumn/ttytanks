@@ -1,5 +1,5 @@
 # ttytanks 
-The game is written in C for FreeBSD
+The game is written in C for *nix system
 ```
                                        # #
                                        ###
@@ -24,11 +24,11 @@ The game is written in C for FreeBSD
                                         #
                                        ###
                                        # #
-
+frags : 34
 ```
 
 ### Version
-F 1.0a
+S 1.0b
 
 ### run
 
