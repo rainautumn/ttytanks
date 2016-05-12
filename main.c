@@ -85,7 +85,8 @@ void *thread_BOTS(void *arg)
                 }
             }
         }
-        usleep(SLEEP_BOTS_CONST/log(frags+ 2));
+	int lvl_speed = SLEEP_BOTS_CONST/log(frags+ 2);
+        usleep(lvl_speed);
 	}
 
 	return 0;

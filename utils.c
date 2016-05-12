@@ -175,7 +175,7 @@ int boom_render(struct boom *b_bot, struct boom *b_me, struct tank *t)
                     }
                 }
                 for (unsigned char j = i; j <= 254; j++)
-                    if(b_bot[i].me_x == b_bot[j].me_x && b_bot[i].me_y == b_bot[j].me_y)
+                    if(b_bot[i].me_x == b_bot[j].me_x && b_bot[i].me_y == b_bot[j].me_y && b_bot[i].live == 'Y' && b_bot[j].live == 'Y')
                     {
                         if(i!=j)
                         {
@@ -184,7 +184,7 @@ int boom_render(struct boom *b_bot, struct boom *b_me, struct tank *t)
                         }
                     }
                 for (unsigned char j = 0; j <= 254; j++)
-                    if(b_bot[i].me_x == b_me[j].me_x && b_bot[i].me_y == b_me[j].me_y)
+                    if(b_bot[i].me_x == b_me[j].me_x && b_bot[i].me_y == b_me[j].me_y && b_bot[i].live == 'Y' && b_me[j].live == 'Y')
                     {
                         b_bot[i].live = 'N';
                         b_me[j].live = 'N';
