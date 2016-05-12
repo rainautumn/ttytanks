@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include <stdio.h>
+#include "kernel.h"
 
 
 void tank_reswap(short n, struct tank *t)
@@ -18,8 +19,8 @@ void tank_reswap(short n, struct tank *t)
 
 
 				t->live = 'Y';
-				t->me_y = LINES-2;
-				t->me_x = COLS/2;
+				t->me_y = LINES-5;
+				t->me_x = left + 30;
 				t->ort =  U_NORTH;
 				t->ride = 'N';
 
@@ -28,8 +29,8 @@ void tank_reswap(short n, struct tank *t)
 				mvaddstr(LINES-1,0,"tank #1 reswap");
 
 				t->live = 'Y';
-				t->me_y = LINES/2;
-				t->me_x = 1;
+				t->me_y = top + 10;
+				t->me_x = left + 1;
 				t->ort =  U_EAST;
 				t->ride = 'N';
 
@@ -39,8 +40,8 @@ void tank_reswap(short n, struct tank *t)
 
 
 				t->live = 'Y';
-				t->me_y = 1;
-				t->me_x = COLS/2;
+				t->me_y = top + 1;
+				t->me_x = left + 40;
 				t->ort =  U_SOUTH;
 				t->ride = 'N';
 
@@ -49,27 +50,28 @@ void tank_reswap(short n, struct tank *t)
 				mvaddstr(LINES-1,0,"tank #3 reswap");
 
 				t->live = 'Y';
-				t->me_y = LINES/2;
-				t->me_x = COLS-2;
+				t->me_y = top + 10;
+				t->me_x = left + W_GAME - 2;
 				t->ort =  U_WEST;
 				t->ride = 'N';
 
 			  break;
 			default:
 			  return;
-			  break;
+		  break;
 			}
+		return;
 		}
 
 void tank_render(struct tank *t)
 {
-    char pixel = '#';
+    char pixel = '^';
 	if(t->live == 'Y')
 	{
 		switch (t->ort)
 			{
 		  case U_NORTH:
-				if (t->ride == 'Y' && t->me_y > 1)
+				if (t->ride == 'Y' && t->me_y > 1 + top)
 					t->me_y-=1;
 				mvaddch(t->me_y, t->me_x,   pixel);
 				mvaddch(t->me_y, t->me_x-1, pixel);
@@ -80,7 +82,7 @@ void tank_render(struct tank *t)
 			break;
 
 		  case U_EAST:
-				if (t->ride == 'Y' && t->me_x < COLS-2)
+				if (t->ride == 'Y' && t->me_x < COLS-3)
 					t->me_x+=1;
 				mvaddch(t->me_y,   t->me_x, pixel);
 				mvaddch(t->me_y-1, t->me_x, pixel);
@@ -91,7 +93,7 @@ void tank_render(struct tank *t)
 			break;
 
 		  case U_SOUTH:
-				if (t->ride == 'Y' && t->me_y < LINES-2)
+				if (t->ride == 'Y' && t->me_y < LINES-5)
 					t->me_y+=1;
 				mvaddch(t->me_y, t->me_x,   pixel);
 				mvaddch(t->me_y, t->me_x-1, pixel);
@@ -102,7 +104,7 @@ void tank_render(struct tank *t)
 			break;
 
 		  case U_WEST:
-				if (t->ride == 'Y'  && t->me_x > 1)
+				if (t->ride == 'Y'  && t->me_x > 1 + left)
 					t->me_x-=1;
 				mvaddch(t->me_y,   t->me_x, pixel);
 				mvaddch(t->me_y-1, t->me_x, pixel);
@@ -167,6 +169,17 @@ int boom_render(struct boom *b_bot, struct boom *b_me, struct tank *t)
                         t[k].live = 'N';
                         b_bot[i].live = 'N';
                     }
+                    for(char n = 0; n < 4; n++)
+                    	if(abs(t[k].me_x - t[n].me_x) <= 1 &&
+						   abs(t[k].me_y - t[n].me_y) <= 1 &&
+						   t[k].live == 'Y' &&
+						   t[n].live == 'Y' &&
+						   k != n)
+						{
+							t[k].live = 'N';
+							t[n].live = 'N';
+						}
+
                     if(abs(t[k].me_x - b_me[i].me_x) <= 1 && abs(t[k].me_y - b_me[i].me_y) <=1 && t[k].live == 'Y' && b_me[i].live == 'Y')
                     {
                         t[k].live = 'N';

@@ -1,5 +1,5 @@
 CC = gcc -std=c99
-OBJS = main.o utils.o
+OBJS = main.o utils.o kernel.o
 
 CFLAGS =
 LDFLAGS =

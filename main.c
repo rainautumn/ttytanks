@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "utils.h"
+#include "kernel.h"
 #include <math.h>
 
 
@@ -29,11 +30,10 @@
 void render_all(void)
 {
 
-	erase();
 	for(short k = 0; k < 4; k++ )
 			tank_render(&t[k]);
     boom_render(&b_bot, &b_me, &t);
-    mvaddstr(LINES-1,0,"frags : ");
+    mvaddstr(LINES-2,0,"# frags : ");
     printw("%i", frags);
 	return;
 }
@@ -97,8 +97,10 @@ int main(void)
 
     initscr();
 
-	mvaddstr(LINES/2-1,COLS/2 - 6,"PRESS ANY KEY");
+	render_gamespace();
+	render_startpage();
 	getch();
+
 	halfdelay(1);
 	erase();
 
@@ -118,8 +120,9 @@ int main(void)
 
     start_game();
 
-	while(1)
+	for(;;)
 	{
+
 		char key = getch();
 		if(key == 'w' || key == 'W')
 		{
@@ -169,7 +172,7 @@ int main(void)
                 break;
             }
             b_me[num_of_boom_me].live='Y';
-            usleep(10000);
+
 		}
 
 			short kills = 0;
@@ -180,7 +183,10 @@ int main(void)
 				cbreak();
                 mvaddstr(LINES/2-2,COLS/2 - 4,  "GAME OVER");
 				mvaddstr(LINES/2-1,COLS/2 - 6,"PRESS ANY KEY");
+				mvaddstr(LINES/2,COLS/2 - 6,"you frags : ");
+			    printw("%i", frags);
 				getch();
+				sleep(1);
 				halfdelay(1);
                 for(unsigned char i = 0; i <= 254; i++)
                 {
@@ -198,7 +204,9 @@ int main(void)
                 for(short k = 1; k < 4; k++ )
                     tank_reswap(k, &t[k]);
             }
+			render_gamespace();
 			render_all();
+			usleep(10000);
 	}
 	exit(0);
 }
