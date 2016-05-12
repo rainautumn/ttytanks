@@ -6,6 +6,7 @@
  */
 
 #include <ncurses.h>
+
 int left;
 int top;
 
@@ -14,3 +15,5 @@ int top;
 
 void render_startpage();
 char render_gamespace();
+void render_setting_main();
+void render_setting_castom();

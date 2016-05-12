@@ -38,13 +38,7 @@ void render_all(void)
 	return;
 }
 
-void start_game(void)
-{
-	for(short k = 0; k < 4; k++ )
-		tank_reswap(k, &t[k]);
-	render_all();
-    return;
-}
+
 
 void *thread_BOTS(void *arg)
 {
@@ -91,35 +85,25 @@ void *thread_BOTS(void *arg)
 
 	return 0;
 }
-int main(void)
+
+void start_local_game(void)
 {
     frags = 0;
-
-    initscr();
-
-	render_gamespace();
-	render_startpage();
-	getch();
-
 	halfdelay(1);
-	erase();
-
-    pthread_t bot1;
-    int id1;
+	pthread_t bot1;
+	int id1;
 	int result;
 
-
 	id1 = 1;
-    result = pthread_create(&bot1, NULL, thread_BOTS, &id1);
+	result = pthread_create(&bot1, NULL, thread_BOTS, &id1);
 	if (result != 0)
 	{
 		perror("Creating the first thread");
-		return -1;
+		return;
 	}
 
-
-    start_game();
-
+	for(short k = 0; k < 4; k++ )
+		tank_reswap(k, &t[k]);
 	for(;;)
 	{
 
@@ -183,7 +167,7 @@ int main(void)
 				cbreak();
                 mvaddstr(LINES/2-2,COLS/2 - 4,  "GAME OVER");
 				mvaddstr(LINES/2-1,COLS/2 - 6,"PRESS ANY KEY");
-				mvaddstr(LINES/2,COLS/2 - 6,"you frags : ");
+				mvaddstr(LINES/2,COLS/2 - 6,"YOUR FRAGS : ");
 			    printw("%i", frags);
 				getch();
 				sleep(1);
@@ -193,7 +177,7 @@ int main(void)
                     b_me[i].live = 'N';
                     b_bot[i].live = 'N';
                 }
-				start_game();
+				start_local_game();
                 frags = 0;
 			}
 			for(int k = 0; k<4; k++)
@@ -208,5 +192,54 @@ int main(void)
 			render_all();
 			usleep(10000);
 	}
+}
+int main(void)
+{
+    initscr();
+
+	for(;;)
+	{
+		render_gamespace();
+		render_startpage();
+		char game_type = getch();
+		erase();
+		render_gamespace();
+		if(game_type == '0')
+			break;
+		switch (game_type)
+		{
+			case '3':
+				start_local_game();
+				break;
+			case '4':
+				for(;;)
+				{
+					render_setting_main();
+					char select = getch();
+					if(select == '0')
+						break;
+					if(select == '1')
+					{
+						for(;;)
+						{
+							render_setting_castom();
+							char select = getch();
+							if(select == '0')
+								break;
+							if(select == '1')
+							{
+								//nope
+							}
+						}
+					}
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+
+
 	exit(0);
 }
