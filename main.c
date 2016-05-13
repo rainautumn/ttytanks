@@ -18,7 +18,7 @@
 #define BOT_TANK_2 2
 #define BOT_TANK_3 3
 
-#define SLEEP_BOTS_CONST 25000
+#define SLEEP_BOTS_CONST 10000
 
 
     char fpc_sleep = 'N';
