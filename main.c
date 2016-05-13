@@ -56,10 +56,10 @@ void *thread_fpc(void *arg)
     mvaddstr(LINES/2-5,COLS/2 - 4,  "GAME OVER");
     mvaddstr(LINES/2-3,COLS/2 - 6,"PRESS ANY KEY");
     mvaddstr(LINES/2-4,COLS/2 - 7,"YOUR FRAGS : ");
+        printw("%i", frags);
+        refresh();
 
-    printw("%i", frags);
-    refresh();
-
+        return 0;
 }
 
 void *thread_BOTS(void *arg)
@@ -101,8 +101,8 @@ void *thread_BOTS(void *arg)
                 }
             }
         }
-    int lvl_speed = 1000000/log(frags+ 2);
-            sleep(1);
+    int lvl_speed = SLEEP_BOTS_CONST*30/log(2+frags);
+            usleep(lvl_speed);
 	}
 
 	return 0;
@@ -131,9 +131,10 @@ void start_local_game(void)
 
     pthread_t fpc;
     int id3;
+    int result2;
 
     id3 = 3;
-    result = pthread_create(&fpc, NULL, thread_fpc, &id3);
+    result2 = pthread_create(&fpc, NULL, thread_fpc, &id3);
     if (result != 0)
     {
         perror("Creating the 3 thread");
@@ -217,13 +218,7 @@ void start_local_game(void)
                 sleep(1);
                 mvaddstr(LINES/2+2,COLS/2 - 5,"TO RESPAWN 1");
                 refresh();
-                                sleep(1);
-                result = pthread_create(&fpc, NULL, thread_fpc, &id3);
-                if (result != 0)
-                {
-                    perror("Creating the 3 thread");
-                    return;
-                }
+                sleep(1);
 				halfdelay(1);
 
                 for(unsigned char i = 0; i <= 254; i++)
@@ -231,8 +226,15 @@ void start_local_game(void)
                     b_me[i].live = 'N';
                     b_bot[i].live = 'N';
                 }
-				start_local_game();
                 frags = 0;
+                for(short k = 0; k < 4; k++ )
+                    tank_reswap(k, &t[k]);
+                result2 = pthread_create(&fpc, NULL, thread_fpc, &id3);
+                if (result != 0)
+                {
+                    perror("Creating the 3 thread");
+                    return;
+                }
 			}
 			for(int k = 0; k<4; k++)
 				if (t[k].live == 'N')
@@ -242,6 +244,7 @@ void start_local_game(void)
                 for(short k = 1; k < 4; k++ )
                     tank_reswap(k, &t[k]);
             }
+
         }
 
 }
