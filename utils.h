@@ -19,6 +19,7 @@ int frags;
 
 struct tank
 {
+    char *skin;
 	unsigned short me_x;
 	unsigned short me_y;
 

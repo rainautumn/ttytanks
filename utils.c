@@ -65,7 +65,7 @@ void tank_reswap(short n, struct tank *t)
 
 void tank_render(struct tank *t)
 {
-    char pixel = '^';
+//    char t->skin = '^';
 	if(t->live == 'Y')
 	{
 		switch (t->ort)
@@ -73,45 +73,45 @@ void tank_render(struct tank *t)
 		  case U_NORTH:
 				if (t->ride == 'Y' && t->me_y > 1 + top)
 					t->me_y-=1;
-				mvaddch(t->me_y, t->me_x,   pixel);
-				mvaddch(t->me_y, t->me_x-1, pixel);
-				mvaddch(t->me_y, t->me_x+1, pixel);
-				mvaddch(t->me_y-1, t->me_x,   pixel);
-				mvaddch(t->me_y+1, t->me_x-1, pixel);
-				mvaddch(t->me_y+1, t->me_x+1, pixel);
+                mvaddch(t->me_y, t->me_x,   t->skin);
+                mvaddch(t->me_y, t->me_x-1, t->skin);
+                mvaddch(t->me_y, t->me_x+1, t->skin);
+                mvaddch(t->me_y-1, t->me_x,   t->skin);
+                mvaddch(t->me_y+1, t->me_x-1, t->skin);
+                mvaddch(t->me_y+1, t->me_x+1, t->skin);
 			break;
 
 		  case U_EAST:
 				if (t->ride == 'Y' && t->me_x < COLS-3)
 					t->me_x+=1;
-				mvaddch(t->me_y,   t->me_x, pixel);
-				mvaddch(t->me_y-1, t->me_x, pixel);
-				mvaddch(t->me_y+1, t->me_x, pixel);
-				mvaddch(t->me_y,   t->me_x+1, pixel);
-				mvaddch(t->me_y-1, t->me_x-1, pixel);
-				mvaddch(t->me_y+1, t->me_x-1, pixel);
+                mvaddch(t->me_y,   t->me_x, t->skin);
+                mvaddch(t->me_y-1, t->me_x, t->skin);
+                mvaddch(t->me_y+1, t->me_x, t->skin);
+                mvaddch(t->me_y,   t->me_x+1, t->skin);
+                mvaddch(t->me_y-1, t->me_x-1, t->skin);
+                mvaddch(t->me_y+1, t->me_x-1, t->skin);
 			break;
 
 		  case U_SOUTH:
 				if (t->ride == 'Y' && t->me_y < LINES-5)
 					t->me_y+=1;
-				mvaddch(t->me_y, t->me_x,   pixel);
-				mvaddch(t->me_y, t->me_x-1, pixel);
-				mvaddch(t->me_y, t->me_x+1, pixel);
-				mvaddch(t->me_y+1, t->me_x,   pixel);
-				mvaddch(t->me_y-1, t->me_x-1, pixel);
-				mvaddch(t->me_y-1, t->me_x+1, pixel);
+                mvaddch(t->me_y, t->me_x,   t->skin);
+                mvaddch(t->me_y, t->me_x-1, t->skin);
+                mvaddch(t->me_y, t->me_x+1, t->skin);
+                mvaddch(t->me_y+1, t->me_x,   t->skin);
+                mvaddch(t->me_y-1, t->me_x-1, t->skin);
+                mvaddch(t->me_y-1, t->me_x+1, t->skin);
 			break;
 
 		  case U_WEST:
 				if (t->ride == 'Y'  && t->me_x > 1 + left)
 					t->me_x-=1;
-				mvaddch(t->me_y,   t->me_x, pixel);
-				mvaddch(t->me_y-1, t->me_x, pixel);
-				mvaddch(t->me_y+1, t->me_x, pixel);
-				mvaddch(t->me_y,   t->me_x-1, pixel);
-				mvaddch(t->me_y-1, t->me_x+1, pixel);
-				mvaddch(t->me_y+1, t->me_x+1, pixel);
+                mvaddch(t->me_y,   t->me_x, t->skin);
+                mvaddch(t->me_y-1, t->me_x, t->skin);
+                mvaddch(t->me_y+1, t->me_x, t->skin);
+                mvaddch(t->me_y,   t->me_x-1, t->skin);
+                mvaddch(t->me_y-1, t->me_x+1, t->skin);
+                mvaddch(t->me_y+1, t->me_x+1, t->skin);
 			break;
 			}
 		t->ride='N';

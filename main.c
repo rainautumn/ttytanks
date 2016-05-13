@@ -18,8 +18,10 @@
 #define BOT_TANK_2 2
 #define BOT_TANK_3 3
 
-#define SLEEP_BOTS_CONST 1000000
+#define SLEEP_BOTS_CONST 25000
 
+
+    char fpc_sleep = 'N';
     unsigned char num_of_boom_bot = 0;
     unsigned char num_of_boom_me = 0;
 	struct tank t[4];
@@ -38,7 +40,27 @@ void render_all(void)
 	return;
 }
 
+void *thread_fpc(void *arg)
+{
+    for(;t[0].live == 'Y';)
+    {
+        usleep(SLEEP_BOTS_CONST);
+        erase();
+        clear();
+        render_gamespace();
+        render_all();
+        refresh();
+    }
+        clear();
+        erase();
+    mvaddstr(LINES/2-5,COLS/2 - 4,  "GAME OVER");
+    mvaddstr(LINES/2-3,COLS/2 - 6,"PRESS ANY KEY");
+    mvaddstr(LINES/2-4,COLS/2 - 7,"YOUR FRAGS : ");
 
+    printw("%i", frags);
+    refresh();
+
+}
 
 void *thread_BOTS(void *arg)
 {
@@ -79,8 +101,8 @@ void *thread_BOTS(void *arg)
                 }
             }
         }
-	int lvl_speed = SLEEP_BOTS_CONST/log(frags+ 2);
-        usleep(lvl_speed);
+    int lvl_speed = 1000000/log(frags+ 2);
+            sleep(1);
 	}
 
 	return 0;
@@ -89,89 +111,121 @@ void *thread_BOTS(void *arg)
 void start_local_game(void)
 {
     frags = 0;
-	halfdelay(1);
-	pthread_t bot1;
+    t[ME_TANK].skin = '#';
+    for(int i = 1; i < 4; i++ )
+        t[i].skin = '8';
+    halfdelay(1);
+    cbreak();
+
+    pthread_t bot;
 	int id1;
 	int result;
 
 	id1 = 1;
-	result = pthread_create(&bot1, NULL, thread_BOTS, &id1);
+    result = pthread_create(&bot, NULL, thread_BOTS, &id1);
 	if (result != 0)
 	{
-		perror("Creating the first thread");
+        perror("Creating the 1 thread");
 		return;
 	}
 
+    pthread_t fpc;
+    int id3;
+
+    id3 = 3;
+    result = pthread_create(&fpc, NULL, thread_fpc, &id3);
+    if (result != 0)
+    {
+        perror("Creating the 3 thread");
+        return;
+    }
+
 	for(short k = 0; k < 4; k++ )
 		tank_reswap(k, &t[k]);
+
+
 	for(;;)
 	{
-
-		char key = getch();
-		if(key == 'w' || key == 'W')
-		{
-			t[ME_TANK].ride='Y';
-			t[ME_TANK].ort=U_NORTH;
-		}
-
-		if(key == 'a' || key == 'A')
-		{
-			t[ME_TANK].ride='Y';
-			t[ME_TANK].ort=U_WEST;
-		}
-
-		if(key == 's' || key == 'S')
-		{
-			t[ME_TANK].ride='Y';
-			t[ME_TANK].ort=U_SOUTH;
-		}
-
-		if(key == 'd' || key == 'D')
-		{
-			t[ME_TANK].ride='Y';
-			t[ME_TANK].ort=U_EAST;
-		}
-		if(key == ' ')
-		{
-            num_of_boom_me += 1;
-            b_me[num_of_boom_me].ort=t[ME_TANK].ort;
-            b_me[num_of_boom_me].me_x=t[ME_TANK].me_x;
-            b_me[num_of_boom_me].me_y=t[ME_TANK].me_y;
-
-            switch (t[ME_TANK].ort)
+        char key;
+            key = getch();
+            if(key == 'w' || key == 'W')
             {
-            case U_NORTH:
-                b_me[num_of_boom_me].me_y -= 3;
-                break;
-            case U_SOUTH:
-                b_me[num_of_boom_me].me_y += 3;
-                break;
-            case U_WEST:
-                b_me[num_of_boom_me].me_x -= 3;
-                break;
-            case U_EAST:
-                b_me[num_of_boom_me].me_x += 3;
-                break;
-            default:
-                break;
+                t[ME_TANK].ride='Y';
+                t[ME_TANK].ort=U_NORTH;
+                            fpc_sleep = 'Y';
             }
-            b_me[num_of_boom_me].live='Y';
 
-		}
+            if(key == 'a' || key == 'A')
+            {
+                t[ME_TANK].ride='Y';
+                t[ME_TANK].ort=U_WEST;
+                            fpc_sleep = 'Y';
+            }
+
+            if(key == 's' || key == 'S')
+            {
+                t[ME_TANK].ride='Y';
+                t[ME_TANK].ort=U_SOUTH;
+                            fpc_sleep = 'Y';
+            }
+
+            if(key == 'd' || key == 'D')
+            {
+                t[ME_TANK].ride='Y';
+                t[ME_TANK].ort=U_EAST;
+                            fpc_sleep = 'Y';
+            }
+            if(key == ' ')
+            {
+                num_of_boom_me += 1;
+                b_me[num_of_boom_me].ort=t[ME_TANK].ort;
+                b_me[num_of_boom_me].me_x=t[ME_TANK].me_x;
+                b_me[num_of_boom_me].me_y=t[ME_TANK].me_y;
+
+                switch (t[ME_TANK].ort)
+                {
+                case U_NORTH:
+                    b_me[num_of_boom_me].me_y -= 3;
+                    break;
+                case U_SOUTH:
+                    b_me[num_of_boom_me].me_y += 3;
+                    break;
+                case U_WEST:
+                    b_me[num_of_boom_me].me_x -= 3;
+                    break;
+                case U_EAST:
+                    b_me[num_of_boom_me].me_x += 3;
+                    break;
+                default:
+                    break;
+                }
+                b_me[num_of_boom_me].live='Y';
+                            fpc_sleep = 'Y';
+
+            }
+            key = '\0';
 
 			short kills = 0;
 
 			if(t[0].live == 'N')
 			{
-				erase();
-				cbreak();
-                mvaddstr(LINES/2-2,COLS/2 - 4,  "GAME OVER");
-				mvaddstr(LINES/2-1,COLS/2 - 6,"PRESS ANY KEY");
-				mvaddstr(LINES/2,COLS/2 - 6,"YOUR FRAGS : ");
-			    printw("%i", frags);
+                cbreak();
 				getch();
-				sleep(1);
+
+                mvaddstr(LINES/2+2,COLS/2 - 5,"TO RESPAWN 2");
+                refresh();
+                sleep(1);
+                mvaddstr(LINES/2+2,COLS/2 - 5,"TO RESPAWN 1");
+                refresh();
+                                sleep(1);
+                result = pthread_create(&fpc, NULL, thread_fpc, &id3);
+                if (result != 0)
+                {
+                    perror("Creating the 3 thread");
+                    return;
+                }
 				halfdelay(1);
+
                 for(unsigned char i = 0; i <= 254; i++)
                 {
                     b_me[i].live = 'N';
@@ -188,15 +242,14 @@ void start_local_game(void)
                 for(short k = 1; k < 4; k++ )
                     tank_reswap(k, &t[k]);
             }
-			render_gamespace();
-			render_all();
-			usleep(10000);
-	}
+        }
+
 }
 int main(void)
 {
     initscr();
-
+    noecho();
+    curs_set(FALSE);
 	for(;;)
 	{
 		render_gamespace();
@@ -208,7 +261,10 @@ int main(void)
 			break;
 		switch (game_type)
 		{
-			case '3':
+            case '2':
+//                start_server();
+                break;
+            case '3':
 				start_local_game();
 				break;
 			case '4':
@@ -237,9 +293,6 @@ int main(void)
 			default:
 				break;
 		}
-	}
-
-
-
+    }
 	exit(0);
 }
