@@ -1,12 +1,12 @@
-CC = gcc -std=c11
+CC = gcc 
 OBJS = main.o utils.o kernel.o
-
+CFLAGS = -std=c11 -02 -march=native -pipe
 LIBS =		-lpthread -lncurses
 
 TARGET =	ttytanks
 
 $(TARGET):	$(OBJS)
-	$(CXX)  $(OBJS) $(LIBS) -o $(TARGET)
+	$(CC)  $(OBJS) $(LIBS) $(CFLAGS) -o $(TARGET)
 
 all:	$(TARGET)
 
