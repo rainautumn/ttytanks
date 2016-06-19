@@ -1,15 +1,14 @@
+CC = gcc -std=c11
 OBJS = main.o utils.o kernel.o
-CFLAGS = -std=c99 -march=native -02 -pipe
-LDFLAGS =
 
-LIBS = -lpthread -lncurses
+LIBS =		-lpthread -lncurses
 
-TARGET = ttytanks
+TARGET =	ttytanks
 
 $(TARGET):	$(OBJS)
-	gcc  $(OBJS) $(CFLAGS) $(LDFLAGS) $(LIBS) -o $(TARGET)
+	$(CXX)  $(OBJS) $(LIBS) -o $(TARGET)
 
 all:	$(TARGET)
 
 clean:
-	rm $(OBJS)
+	rm $(OBJS) 
