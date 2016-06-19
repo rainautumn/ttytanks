@@ -6,7 +6,7 @@ LIBS =		-lpthread -lncurses
 TARGET =	ttytanks
 
 $(TARGET):	$(OBJS)
-	$(CXX)  $(OBJS) $(LIBS) -o $(TARGET)
+	$(CXX)  $(OBJS) -o $(TARGET)  $(LIBS)
 
 all:	$(TARGET)
 
