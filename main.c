@@ -114,7 +114,7 @@ void start_local_game(void)
     t[ME_TANK].skin = '#';
     for(int i = 1; i < 4; i++ )
         t[i].skin = '8';
-    halfdelay(1);
+    halfdelay(1); // /usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
     cbreak();
 
     pthread_t bot;
@@ -219,7 +219,7 @@ void start_local_game(void)
                 mvaddstr(LINES/2+2,COLS/2 - 5,"TO RESPAWN 1");
                 refresh();
                 sleep(1);
-				halfdelay(1);
+				halfdelay(1);  ///usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
 
                 for(unsigned char i = 0; i <= 254; i++)
                 {
