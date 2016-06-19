@@ -46,3 +46,15 @@ $ sudo apt install libncurses5-dev
 ```
 # pkg install ncurces
 ```
+###### Gentoo
+```
+# emerge -av sys-libs/ncurses
+```
+###### Arch
+```
+# pacman -S ncurses
+```
+###### Fedora
+```
+# yum install ncurses-devel
+```
