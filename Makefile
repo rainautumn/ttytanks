@@ -1,7 +1,7 @@
 CC = gcc -std=c99
 OBJS = main.o utils.o kernel.o
 
-CFLAGS =
+CFLAGS = -march=native -02 -pipe
 LDFLAGS =
 
 LIBS =		-lpthread -lncurses
