@@ -7,4 +7,4 @@ $(TARGET): $(OBJS)
         $(CC)  $(OBJS) $(CFLAGS) $(LDLIBS) -o $(TARGET)
 all:    $(TARGET)
 clean:
-        rm $(TARGET) $(OBJS}
+        rm $(TARGET) $(OBJS)
