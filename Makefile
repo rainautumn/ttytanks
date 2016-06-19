@@ -1,14 +1,14 @@
-CC = gcc -std=c11
+CFLAGS = -std=c11
 OBJS = main.o utils.o kernel.o
 
-LIBS =		-lpthread -lncurses
+LDLIBS = -lpthread -lncurses -lm -ltinfo
 
-TARGET =	ttytanks
+TARGET = ttytanks
 
-$(TARGET):	$(OBJS)
-	$(CXX)  $(OBJS) -o $(TARGET)  $(LIBS)
+$(TARGET): $(OBJS)
 
-all:	$(TARGET)
+all: $(TARGET)
 
 clean:
-	rm $(OBJS) 
+	rm $(OBJS)
+
