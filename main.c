@@ -149,28 +149,28 @@ void start_local_game(void)
 	{
         char key;
             key = getch();
-            if(key == 'w' || key == 'W')
+            if(key == 'w')
             {
                 t[ME_TANK].ride='Y';
                 t[ME_TANK].ort=U_NORTH;
                             fpc_sleep = 'Y';
             }
 
-            if(key == 'a' || key == 'A')
+            if(key == 'a')
             {
                 t[ME_TANK].ride='Y';
                 t[ME_TANK].ort=U_WEST;
                             fpc_sleep = 'Y';
             }
 
-            if(key == 's' || key == 'S')
+            if(key == 's')
             {
                 t[ME_TANK].ride='Y';
                 t[ME_TANK].ort=U_SOUTH;
                             fpc_sleep = 'Y';
             }
 
-            if(key == 'd' || key == 'D')
+            if(key == 'd')
             {
                 t[ME_TANK].ride='Y';
                 t[ME_TANK].ort=U_EAST;

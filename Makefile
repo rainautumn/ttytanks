@@ -1,10 +1,13 @@
+#clang also works good
 CC = gcc
-OBJS = main.o utils.o kernel.o
+SRCS = main.c utils.c kernel.c
 CFLAGS = -std=c11 -O2 -march=native -pipe
-LDLIBS = -lpthread -lncurses -lm -ltinfo
+LDLIBS = -lpthread -lncurses -lm
 TARGET = ttytanks
-$(TARGET): $(OBJS)
-        $(CC)  $(OBJS) $(CFLAGS) $(LDLIBS) -o $(TARGET)
-all:    $(TARGET)
+#static binary by default, should be faster than dynamicaly linked
+static:
+	$(CC)  $(SRCS) $(LDLIBS) $(CFLAGS) -static -o $(TARGET)
+dynamic:
+	$(CC) $(SRCS) $(LDLIBS) $(CFLAGS) -o $(TARGET)
 clean:
-        rm $(TARGET) $(OBJS)
+	rm $(TARGET)
