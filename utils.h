@@ -15,7 +15,7 @@
 
 #include <ncurses.h>
 
-int frags;
+unsigned short frags;
 
 struct tank
 {
