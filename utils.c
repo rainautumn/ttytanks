@@ -1,4 +1,4 @@
-/*
+ /*
  * utils.c
  *
  *  Created on: Oct 29, 2015
@@ -12,21 +12,22 @@
 
 void tank_reswap(short n, struct tank *t)
 		{
+                unsigned short lin=LINES;
 		switch (n)
 			{
 			case 0:
-				mvaddstr(LINES-1,0,"tank #0 reswap");
+				mvaddstr(lin-1,0,"tank #0 reswap");
 
 
 				t->live = 'Y';
-				t->me_y = LINES-5;
+				t->me_y = lin-5;
 				t->me_x = left + 30;
 				t->ort =  U_NORTH;
 				t->ride = 'N';
 
 			  break;
 			case 1:
-				mvaddstr(LINES-1,0,"tank #1 reswap");
+				mvaddstr(lin-1,0,"tank #1 reswap");
 
 				t->live = 'Y';
 				t->me_y = top + 10;
@@ -36,7 +37,7 @@ void tank_reswap(short n, struct tank *t)
 
 			  break;
 			case 2:
-				mvaddstr(LINES-1,0,"tank #2 reswap");
+				mvaddstr(lin-1,0,"tank #2 reswap");
 
 
 				t->live = 'Y';
@@ -47,7 +48,7 @@ void tank_reswap(short n, struct tank *t)
 
 			  break;
 			case 3:
-				mvaddstr(LINES-1,0,"tank #3 reswap");
+				mvaddstr(lin-1,0,"tank #3 reswap");
 
 				t->live = 'Y';
 				t->me_y = top + 10;
@@ -65,6 +66,8 @@ void tank_reswap(short n, struct tank *t)
 
 void tank_render(struct tank *t)
 {
+unsigned short lin=LINES;
+unsigned short col=COLS;
 //    char t->skin = '^';
 	if(t->live == 'Y')
 	{
@@ -82,7 +85,7 @@ void tank_render(struct tank *t)
 			break;
 
 		  case U_EAST:
-				if (t->ride == 'Y' && t->me_x < COLS-3)
+				if (t->ride == 'Y' && t->me_x < col-3)
 					t->me_x+=1;
                 mvaddch(t->me_y,   t->me_x, t->skin);
                 mvaddch(t->me_y-1, t->me_x, t->skin);
@@ -93,7 +96,7 @@ void tank_render(struct tank *t)
 			break;
 
 		  case U_SOUTH:
-				if (t->ride == 'Y' && t->me_y < LINES-5)
+				if (t->ride == 'Y' && t->me_y < lin-5)
 					t->me_y+=1;
                 mvaddch(t->me_y, t->me_x,   t->skin);
                 mvaddch(t->me_y, t->me_x-1, t->skin);

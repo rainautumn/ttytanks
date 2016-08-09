@@ -18,8 +18,10 @@
 #include <unistd.h>
 #include <errno.h>
 
+
 void handle_error(char* err_fun) {
-  mvaddstr(LINES-2,0,"error!!!");
+unsigned short lin = LINES;
+  mvaddstr(lin-2,0,"error!!!");
   exit(1);
 }
 
@@ -30,9 +32,13 @@ void child_proc(int sock) {
   char format_buff[256];
   write(sock, msg, sizeof(msg));
   name_len = read(sock, name_buff, sizeof(name_buff));
+/*
+ALWAYS FALSE
+name_len IS UNSIGNED INTEGER
   if(-1 == name_len) {
     handle_error("read");
   }
+*/
   while(name_len > 0 &&
       ( '\n' == name_buff[name_len-1]  ||
         '\r' == name_buff[name_len-1])) {
@@ -101,6 +107,7 @@ void start_server()
 }
 void render_startpage()
 {
+unsigned short lin=LINES;
 	mvaddstr(top + H_GAME/2-6, left + W_GAME/2 -6 ,"TTY TANKS");
 	mvaddstr(top + H_GAME/2-2, left + 5 ,"1 connect to server");
 	mvaddstr(top + H_GAME/2-1, left + 5 ,"2 create server");
@@ -117,41 +124,73 @@ void render_startpage()
 	mvaddstr(top + H_GAME/2+2, left + 50 ,"######");
 	mvaddstr(top + H_GAME/2+3, left + 50 ,"##  ##");
 	mvaddstr(top + H_GAME/2+4, left + 50 ,"##  ##");
-	mvaddstr(LINES-2,0,"#");
+	mvaddstr(lin-2,0,"#");
 }
 
 char render_gamespace()
 {
-	erase();
-	left = COLS - W_GAME - 1;
-	if(left < 0)
+//may be better col = COLS-1; etc../
+unsigned short col = COLS;
+unsigned short lin = LINES;
+//why query to environment variables all the time? better do it ONE TIME IN WHOLE PROGRAM.
+//	erase(); //delete this//
+
+        left = col - W_GAME - 1;
+	if(left < 1)
 		return 'E';
-	for(int i = 0; i < left; i++)
-		for(int j = 0; j < LINES-3; j++)
-			mvaddstr(j,i, "#");
+//	for(int i = left-1; i < left; i++)
+//j=0
+//make loop shorter
+unsigned short i = left-1;
+ top = lin - H_GAME -3;
+unsigned short row = col-1;
+unsigned short cot = lin-3;
+//left and right line loop>>
+		for(int j=top; j < cot; j++)
+                 {
+			mvaddstr(j,i,"#");
+			mvaddstr(j,row,"#");
+                 }
+//	int right = COLS - 1;
+//j=0
+//make loop smaller
+//		for(int j = LINES -1; j < LINES; j++)
+//cut off loop, do it one time
+//			mvaddstr(LINES-1,right, "#");
+//no need for it at all
 
-	int right = COLS - 1;
-		for(int j = 0; j < LINES; j++)
-			mvaddstr(j,right, "#");
 
-	top = LINES - H_GAME - 3;
-	if(top < 0)
+	if(top < 1)
 		return 'E';
-	for(int i = 0; i < top; i++)
-			for(int j = 0; j < COLS; j++)
-				mvaddstr(i,j, "#");
+//	for(int i = 0; i < top; i++)
+//remove loop, render only one top line
 
-	for(int i = 0; i < COLS; i++)
-		mvaddstr(LINES-1,i, "#");
-	for(int i = 0; i < COLS; i++)
-		mvaddstr(LINES-3,i, "#");
+//			for(int j = COLS-72; j < COLS; j++)
+//				mvaddstr(top-1,j, "#");
+//This loop moved to the next one
+
+//	for(int i = 0; i < COLS; i++)
+//i
+//		mvaddstr(LINES-1,LINES-2, "#");
+
+//or COLS-W_GAME+2
+
+//top and bottom !loop>>
+//	for(int i = col-72; i < col; i++)
+//	   {
+i=col-72;
+mvaddstr(top-1,i,"########################################################################");
+mvaddstr(cot,i,"########################################################################");
+//           }
+
 }
 
 void render_setting_main()
 {
+unsigned short lin = LINES;
 	mvaddstr(top + H_GAME/2-1, left + 5 ,"1 network game");
 	mvaddstr(top + H_GAME/2+0, left + 5 ,"0 return");
-	mvaddstr(LINES-2,0,"#");
+	mvaddstr(lin-2,0,"#");
 }
 
 void render_setting_castom()

@@ -12,14 +12,12 @@
 #include "kernel.h"
 #include <math.h>
 
-
 #define ME_TANK 0
 #define BOT_TANK_1 1
 #define BOT_TANK_2 2
 #define BOT_TANK_3 3
 
 #define SLEEP_BOTS_CONST 10000
-
 
     char fpc_sleep = 'N';
     unsigned char num_of_boom_bot = 0;
@@ -28,34 +26,38 @@
     struct boom b_bot[256];
     struct boom b_me[256];
 
-
-void render_all(void)
+void render_all()
 {
-
+unsigned short lin=LINES;
+unsigned short col=COLS-W_GAME-2;
 	for(short k = 0; k < 4; k++ )
 			tank_render(&t[k]);
     boom_render(&b_bot, &b_me, &t);
-    mvaddstr(LINES-2,0,"# frags : ");
+//
+   mvaddstr(lin-2,col,"# frags : ");
     printw("%i", frags);
 	return;
 }
 
 void *thread_fpc(void *arg)
 {
+unsigned short lin=LINES;
+unsigned short col=COLS;
     for(;t[0].live == 'Y';)
     {
         usleep(SLEEP_BOTS_CONST);
-        erase();
+//     erase(); //delete this
+//     Is it possible ti fis terrible rendering in framebuffer?
         clear();
-        render_gamespace();
+        render_gamespace(); //(better do it once)
         render_all();
         refresh();
     }
         clear();
-        erase();
-    mvaddstr(LINES/2-5,COLS/2 - 4,  "GAME OVER");
-    mvaddstr(LINES/2-3,COLS/2 - 6,"PRESS ANY KEY");
-    mvaddstr(LINES/2-4,COLS/2 - 7,"YOUR FRAGS : ");
+//      erase();
+    mvaddstr(lin/2-5,col/2 - 4,  "GAME OVER");
+    mvaddstr(lin/2-3,col/2 - 6,"PRESS ANY KEY");
+    mvaddstr(lin/2-4,col/2 - 7,"YOUR FRAGS : ");
         printw("%i", frags);
         refresh();
 
@@ -110,12 +112,12 @@ void *thread_BOTS(void *arg)
 
 void start_local_game(void)
 {
-    frags = 0;
-    t[ME_TANK].skin = '#';
-    for(int i = 1; i < 4; i++ )
-        t[i].skin = '8';
+frags = 0;
+t[ME_TANK].skin = '#';
+for(int i = 1; i < 4; i++ )
+t[i].skin = '8';
 //    halfdelay(1); // /usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
-    cbreak();
+cbreak();
 
     pthread_t bot;
 	int id1;
@@ -141,7 +143,7 @@ void start_local_game(void)
         return;
     }
 
-	for(short k = 0; k < 4; k++ )
+	for(unsigned short k = 0; k < 4; k++ )
 		tank_reswap(k, &t[k]);
 
 
@@ -149,6 +151,8 @@ void start_local_game(void)
 	{
         char key;
             key = getch();
+//short delay, not works
+//	    usleep(9999);
             if(key == 'w')
             {
                 t[ME_TANK].ride='Y';
@@ -202,7 +206,8 @@ void start_local_game(void)
                 }
                 b_me[num_of_boom_me].live='Y';
                             fpc_sleep = 'Y';
-
+//delay after shoot, not works
+//		usleep(59999);
             }
             key = '\0';
 
@@ -250,16 +255,22 @@ void start_local_game(void)
 }
 int main(void)
 {
+//unsigned short lin=LINES;
+//unsigned short col=COLS;
+//can't recieve value
     initscr();
     noecho();
     curs_set(FALSE);
+render_gamespace();
+render_startpage();
 	for(;;)
 	{
-		render_gamespace();
-		render_startpage();
+//removed from loop
+//		render_gamespace();
+//		render_startpage();
 		char game_type = getch();
-		erase();
-		render_gamespace();
+//		erase();    delete this
+//		render_gamespace(); and this
 		if(game_type == '0')
 			break;
 		switch (game_type)
