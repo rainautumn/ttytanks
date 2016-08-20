@@ -74,11 +74,12 @@ void print_about()
   print_canvas();
   mvaddstr(3,1,"                         About                           ");
   mvaddstr(5,1,"    Created on: 2015/10/29                               ");
-  mvaddstr(6,1,"        Author: rainautumn                               ");
-  mvaddstr(7,1,"  Contributors: DmitryHetman                             ");
-  mvaddstr(8,1,"  GitHub Pages:                                          ");
-  mvaddstr(9,1,"          github.com/rainatumn/ttytanks                  ");
- mvaddstr(10,1,"          github.com/DmitryHetman/ttytanks               ");
+  mvaddstr(6,1,"       Version: 1.1                                      ");
+  mvaddstr(7,1,"        Author: rainautumn                               ");
+  mvaddstr(8,1,"  Contributors: DmitryHetman                             ");
+  mvaddstr(9,1,"  GitHub Pages:                                          ");
+ mvaddstr(10,1,"          github.com/rainatumn/ttytanks                  ");
+ mvaddstr(11,1,"          github.com/DmitryHetman/ttytanks               ");
  mvaddstr(19,1,"  0 - Exit                                               ");
 
 }
