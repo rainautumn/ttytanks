@@ -1,8 +1,9 @@
 /*
  * main.c
  *
- *  Created on: Oct 29, 2015
- *      Author: rainautumn
+ *   Created on: Oct 29, 2015
+ *       Author: rainautumn
+ * Contributors: DmitryHetman
  */
 
 #include <pthread.h>
@@ -11,7 +12,7 @@
 #include "utils.h"
 #include "kernel.h"
 #include <math.h>
-
+#include <stdint.h>
 
 #define ME_TANK 0
 #define BOT_TANK_1 1
@@ -20,42 +21,51 @@
 
 #define SLEEP_BOTS_CONST 10000
 
-
-    char fpc_sleep = 'N';
-    unsigned char num_of_boom_bot = 0;
-    unsigned char num_of_boom_me = 0;
+    bool fpc_sleep = 0; //bool now
+    uint_fast8_t num_of_boom_bot = 0;
+    uint_fast8_t num_of_boom_me = 0;
 	struct tank t[4];
     struct boom b_bot[256];
     struct boom b_me[256];
 
-
-void render_all(void)
+void render_all()
 {
-
+uint_fast8_t lin=LINES/2+10;
+uint_fast8_t col=COLS/2-37;
 	for(short k = 0; k < 4; k++ )
 			tank_render(&t[k]);
     boom_render(&b_bot, &b_me, &t);
-    mvaddstr(LINES-2,0,"# frags : ");
+//
+   mvaddstr(lin-2,col,"# frags : ");
     printw("%i", frags);
 	return;
 }
 
 void *thread_fpc(void *arg)
 {
-    for(;t[0].live == 'Y';)
+uint_fast8_t lin=LINES;
+uint_fast8_t col=COLS;
+    for(;t[0].live;)
     {
         usleep(SLEEP_BOTS_CONST);
-        erase();
-        clear();
-        render_gamespace();
+//     erase(); //delete this no need at all.
+//     Is it possible ti fis terrible rendering in framebuffer?
+
+
+//Remove this shit clear();
+//Do a normal rendering
+//       clear();
+        render_gamespace(); //(better do it once)
         render_all();
-        refresh();
+       refresh();
     }
+//Remove clear
+//
         clear();
-        erase();
-    mvaddstr(LINES/2-5,COLS/2 - 4,  "GAME OVER");
-    mvaddstr(LINES/2-3,COLS/2 - 6,"PRESS ANY KEY");
-    mvaddstr(LINES/2-4,COLS/2 - 7,"YOUR FRAGS : ");
+//      erase();
+    mvaddstr(lin/2-5,col/2 - 4,  "GAME OVER");
+    mvaddstr(lin/2-3,col/2 - 6,"PRESS ANY KEY");
+    mvaddstr(lin/2-4,col/2 - 7,"YOUR FRAGS : ");
         printw("%i", frags);
         refresh();
 
@@ -66,21 +76,21 @@ void *thread_BOTS(void *arg)
 {
     for(;;)
     {
-        for(int n = 1; n <4; n ++ )
+        for(uint_fast8_t n = 1; n <4; n ++ )
         {
                 t[n].ort = rand() % 4;
 
-            unsigned char ridebot = rand() % 10;
+            uint_fast8_t ridebot = rand() % 10;
             if (ridebot > 2)
-                t[n].ride = 'Y';
-            unsigned char boombot = rand() % 10;
-            if (boombot > 2 && t[n].live == 'Y')
+                t[n].ride = 1; //bool, true means to ride
+            uint_fast8_t boombot = rand() % 10;
+            if (boombot > 2 && t[n].live) //&& live == true (1)
             {
                 num_of_boom_bot += 1;
                 b_bot[num_of_boom_bot].ort  = t[n].ort;
                 b_bot[num_of_boom_bot].me_x = t[n].me_x;
                 b_bot[num_of_boom_bot].me_y = t[n].me_y;
-                b_bot[num_of_boom_bot].live = 'Y';
+                b_bot[num_of_boom_bot].live = 1;
 
                 switch (t[n].ort)
                 {
@@ -101,7 +111,7 @@ void *thread_BOTS(void *arg)
                 }
             }
         }
-    int lvl_speed = SLEEP_BOTS_CONST*30/log(2+frags);
+   uint_fast16_t lvl_speed = SLEEP_BOTS_CONST*30/log(2+frags);
             usleep(lvl_speed);
 	}
 
@@ -110,18 +120,18 @@ void *thread_BOTS(void *arg)
 
 void start_local_game(void)
 {
-    frags = 0;
-    t[ME_TANK].skin = '#';
-    for(int i = 1; i < 4; i++ )
-        t[i].skin = '8';
+frags = 0;
+t[ME_TANK].skin = '#';
+for(int i = 1; i < 4; i++ )
+t[i].skin = '8';
 //    halfdelay(1); // /usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
-    cbreak();
+cbreak();
 
     pthread_t bot;
-	int id1;
-	int result;
+	uint_fast8_t id1;
+        uint_fast8_t result;
 
-	id1 = 1;
+       id1 = 1;
     result = pthread_create(&bot, NULL, thread_BOTS, &id1);
 	if (result != 0)
 	{
@@ -130,8 +140,8 @@ void start_local_game(void)
 	}
 
     pthread_t fpc;
-    int id3;
-    int result2;
+    uint_fast8_t id3;
+    uint_fast8_t result2;
 
     id3 = 3;
     result2 = pthread_create(&fpc, NULL, thread_fpc, &id3);
@@ -141,7 +151,7 @@ void start_local_game(void)
         return;
     }
 
-	for(short k = 0; k < 4; k++ )
+	for(uint_fast8_t k = 0; k < 4; k++ )
 		tank_reswap(k, &t[k]);
 
 
@@ -149,32 +159,34 @@ void start_local_game(void)
 	{
         char key;
             key = getch();
-            if(key == 'w' || key == 'W')
+//short delay, not works
+//	    usleep(9999);
+            if(key == 'w')
             {
-                t[ME_TANK].ride='Y';
+                t[ME_TANK].ride=1;
                 t[ME_TANK].ort=U_NORTH;
-                            fpc_sleep = 'Y';
+                            fpc_sleep = 1;
             }
 
-            if(key == 'a' || key == 'A')
+            if(key == 'a')
             {
-                t[ME_TANK].ride='Y';
+                t[ME_TANK].ride=1;
                 t[ME_TANK].ort=U_WEST;
-                            fpc_sleep = 'Y';
+                            fpc_sleep = 1;
             }
 
-            if(key == 's' || key == 'S')
+            if(key == 's')
             {
-                t[ME_TANK].ride='Y';
+                t[ME_TANK].ride=1;
                 t[ME_TANK].ort=U_SOUTH;
-                            fpc_sleep = 'Y';
+                            fpc_sleep = 1;
             }
 
-            if(key == 'd' || key == 'D')
+            if(key == 'd')
             {
-                t[ME_TANK].ride='Y';
+                t[ME_TANK].ride=1;
                 t[ME_TANK].ort=U_EAST;
-                            fpc_sleep = 'Y';
+                            fpc_sleep = 1;
             }
             if(key == ' ')
             {
@@ -200,15 +212,16 @@ void start_local_game(void)
                 default:
                     break;
                 }
-                b_me[num_of_boom_me].live='Y';
-                            fpc_sleep = 'Y';
-
+                b_me[num_of_boom_me].live=1;
+                            fpc_sleep =1;
+//delay after shoot, not works
+//		usleep(59999);
             }
             key = '\0';
 
-			short kills = 0;
+			uint_fast8_t kills = 0;
 
-			if(t[0].live == 'N')
+			if(! t[0].live) //if .live = false
 			{
                 cbreak();
 				getch();
@@ -219,15 +232,17 @@ void start_local_game(void)
                 mvaddstr(LINES/2+2,COLS/2 - 5,"TO RESPAWN 1");
                 refresh();
                 sleep(1);
+//clear before respawn
+		clear();
 //				halfdelay(1);  ///usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
 
-                for(unsigned char i = 0; i <= 254; i++)
+                for(uint_fast8_t i = 0; i <= 254; i++)
                 {
-                    b_me[i].live = 'N';
-                    b_bot[i].live = 'N';
+                    b_me[i].live = 0;
+                    b_bot[i].live = 0;
                 }
                 frags = 0;
-                for(short k = 0; k < 4; k++ )
+                for(uint_fast8_t k = 0; k < 4; k++ )
                     tank_reswap(k, &t[k]);
                 result2 = pthread_create(&fpc, NULL, thread_fpc, &id3);
                 if (result != 0)
@@ -236,12 +251,12 @@ void start_local_game(void)
                     return;
                 }
 			}
-			for(int k = 0; k<4; k++)
-				if (t[k].live == 'N')
+			for(uint_fast8_t k = 0; k<4; k++)
+				if (! t[k].live)
 					kills += 1;
 			if(kills >= 3)
             {
-                for(short k = 1; k < 4; k++ )
+                for(uint_fast8_t k = 1; k < 4; k++ )
                     tank_reswap(k, &t[k]);
             }
 
@@ -250,24 +265,30 @@ void start_local_game(void)
 }
 int main(void)
 {
+//unsigned short lin=LINES;
+//unsigned short col=COLS;
+//can't recieve value
     initscr();
     noecho();
     curs_set(FALSE);
+render_gamespace();
+render_startpage();
 	for(;;)
 	{
-		render_gamespace();
-		render_startpage();
+//removed from loop
+//		render_gamespace();
+//		render_startpage();
 		char game_type = getch();
-		erase();
-		render_gamespace();
+//		erase();    delete this
+//		render_gamespace(); and this
 		if(game_type == '0')
 			break;
 		switch (game_type)
 		{
-            case '2':
+//            case '2':
 //                start_server();
-                break;
-            case '3':
+//                break;
+            case '3':		clear();
 				start_local_game();
 				break;
 			case '4':
@@ -297,5 +318,5 @@ int main(void)
 				break;
 		}
     }
-	exit(0);
+return 0;
 }

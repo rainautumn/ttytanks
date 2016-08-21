@@ -1,0 +1,42 @@
+#!/bin/bash
+#: Created on:   2016/08/19
+#: Author:       DmitryHetman
+#: Contributors:
+#: Description:  Make precompiled binaries for ttytanks
+#: Synopsis:     ./makeprecompilled
+
+[[ $# -ne 0 ]] && grep '^#:' $0 && exit 0 # comment it if you execute it from Makefile
+
+# clang also works good, clang with -O0 should be better for removing warnings
+# clang compile slower than gcc, but provide good output
+CC=gcc
+
+SRCS="lightsources/main.c lightsources/core.c lightsources/multiplayer.c lightsources/canvas.c lightsources/render.c"
+# Warnings, ttytanks with -std=c11 can't be compilled with -Werror, -pedantic-errors, you should add this flags in future,
+# now just comment it if you use sources/*.c
+WCFLAGS="-Wall -Wextra -pedantic -Werror=pedantic -Wfatal-errors -pedantic-errors -Werror -v"
+
+# -std=c11 not works good, look for warning with clang
+# -Ofast -funroll-loops safe options for this game
+CFLAGS="${WCFLAGS} -std=gnu11 -Ofast -pthread -funroll-loops -pipe"
+# you may need -ltinfo in LDLIBS
+LDLIBS="-lpthread -lncurses -lm" #-ltinfo
+TARGET='ttytanks'
+
+
+# Make binaries for intel 64bit processors:
+
+for march in core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake
+do
+ #$@ -march=${march} -static -o precompiled/intel/${march}_static_${TARGET} # if execute from makefile
+ $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/intel/${march}_static_${TARGET} #if execute as standalone script
+done
+
+# Make binaries for amd 64bit processors:
+
+for march in k8 k8-sse3 barcelona bdver1 bdver2 bdver3 bdver4 znver1 btver1 btver2
+do
+ #$@ -march=${march} -static -o precompiled/amd/${march}_static_${TARGET}
+ $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/amd/${march}_static_${TARGET}
+done
+
