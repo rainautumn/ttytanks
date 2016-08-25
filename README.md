@@ -1,31 +1,6 @@
 # ttytanks 
-The game is written in C for *nix system
-```
-                                       # #
-                                       ###
-                                        #                                      
 
-
-
-
-
-   #
-  ###
-  # #
-                                 #                                           # #
-                                                                        #    ###
-                                                                              #
-
-
-
-
-
-  
-                                        #
-                                       ###
-                                       # #
-frags : 34
-```
+branch for testing and developing
 
 ### Version
 S 1.1
