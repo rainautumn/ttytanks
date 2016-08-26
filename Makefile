@@ -40,11 +40,12 @@ LDLIBS = -lpthread -lncurses -lm #-ltinfo
 TARGET = ttytanks
 
 # make precompiled script
-PRECOMPILED = ./makeprecompiled
+#PRECOMPILED = ./makeprecompiled
 
 # static binary by default, faster than dynamicaly linked, more portable if disable -march=native, you can use it on systems
 # such as embedded systems, android smartphones, so on...
-default: static
+default:
+	make --trace --debug=v static
 
 #Make staticaly linked (standalone) binary, -j option not works for making statically linked binary
 static: $(SRCS)
@@ -54,8 +55,8 @@ dynamic: $(SRCS)
 	make target
 
 # Not works yet, I don't know how to call external script, or loop in Makefile, so use standalone script makeprecompiled
-precompiled: $(SRCS) # Make precompiled binaries, only static, only from lightsources, so it must be very portable;
-	$(PRECOMPILED) $(CC) $(SRCS) $(LDLIBS) $(CFLAGS)
+#precompiled: $(SRCS) # Make precompiled binaries, only static, only from lightsources, so it must be very portable;
+#	$(PRECOMPILED) $(CC) $(SRCS) $(LDLIBS) $(CFLAGS)
 
 #Make dynamicaly linked binary. You can't use -j option for static or dynamic, only for objects
 
