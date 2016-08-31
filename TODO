@@ -1,0 +1,28 @@
+#Not by order
+1. Fix Artefacts
+2. Fix bullet shooting
+3. Disable shooting in wall
+4. Rewrite /sources/*.*
+5. Create a beta-branch
+6. Create a .ebuilds for beta and sable versions
+7. Make a .deb .rpm .pac packages
+8. Add multiplayer Lan/Internet
+9. Create IRC channel
+10. Add ability to shoot while moving
+11. Add all packages to repositories
+12. Add ./configure script for enabling/disabling multiplayer, selecting between sources/lightsources, and some other features.
+13. Make refactoring and add more comments to render.c, core.c
+14. Forbid bots to kill other bots;
+15. Prepare normal terminal before exiting from game.
+16. Fix Frags encounter;
+17. Add levels/maps (Now it counts bot's statistic as well as your)
+18. Add Musik,Sound effects
+19. Add manual page
+20. Fix control delay (wariable with key bihaves like stack, or in core.c loop repeats depending on how much characters were inputed, not on which key was pressed and how long), test 
+it with adding delay to loop with input listening.
+21. Add ability to quit the game
+22. Edit boom_render, it's terrible function, ugly ugly code, it's executed 96% of game, a lot of lines written twice,
+23. Edit tank_reswap, I can't change orientation of tanks.
+24. Edit Exit from game, terminal after exit crashes;
+25. Maybe better use functional approach instead of OOP? for example moveUp(tank[n]) instead of tank_render(tank);
+26. Move make_precompilled make_statistics to Makefile

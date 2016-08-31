@@ -23,20 +23,21 @@ CFLAGS="${WCFLAGS} -std=gnu11 -Ofast -pthread -funroll-loops -pipe"
 LDLIBS="-lpthread -lncurses -lm" #-ltinfo
 TARGET='ttytanks'
 
+# Make generic binary for amd64, supposed that it will be compiled on amd64 CPU
+$CC ${SRCS} ${LDLIBS} ${CFLAGS} -static -o precompiled/amd64/amd64_static_${TARGET}
 
 # Make binaries for intel 64bit processors:
-
 for march in core2 nehalem westmere sandybridge ivybridge haswell broadwell skylake
 do
  #$@ -march=${march} -static -o precompiled/intel/${march}_static_${TARGET} # if execute from makefile
- $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/intel/${march}_static_${TARGET} #if execute as standalone script
+ $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/amd64/intel/${march}_static_${TARGET} 
+#if execute as standalone script
 done
 
 # Make binaries for amd 64bit processors:
-
 for march in k8 k8-sse3 barcelona bdver1 bdver2 bdver3 bdver4 znver1 btver1 btver2
 do
  #$@ -march=${march} -static -o precompiled/amd/${march}_static_${TARGET}
- $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/amd/${march}_static_${TARGET}
+ $CC ${SRCS} ${LDLIBS} ${CFLAGS} -march=${march} -static -o precompiled/amd64/amd/${march}_static_${TARGET}
 done
 

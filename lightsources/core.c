@@ -23,19 +23,17 @@ void *thread_fpc()
     for(;t[0].live;)
     {
         usleep(SLEEP_BOTS_CONST);
-	//clear befor it, remove it
-        print_canvas(); //print clear canvas
         render_all();
        refresh();
     }
-//should be better move it to canvas.c
+//should be better move it to canvas.c: print_game_over;
      mvaddstr(8,1,"                                                  ");
      mvaddstr(9,1,"                       GAME OVER                  ");
     mvaddstr(10,1,"                     PRESS ANY KEY                ");
     mvaddstr(11,1,"                   YOUR FRAGS : ");
-     printw("%i", frags); //may be better use ncurses instead
+     printw("%i%s", frags,"                       "); //string for clearing artefacts, remove it later, after fix;
     mvaddstr(12,1,"                                             ");
-        refresh();
+        refresh(); //what is refresh? called two times after death
 return 0;
 }
 
@@ -87,6 +85,7 @@ void *thread_BOTS()
 
 void start_local_game()
 {
+print_canvas(); //print canvas before start game
 frags = 0;
 //    halfdelay(1); // /usr/lib/gcc/x86_64-pc-linux-gnu/5.3.0/../../../../x86_64-pc-linux-gnu/bin/ld: main.o: undefined reference to symbol 'halfdelay'
 cbreak();
@@ -121,42 +120,41 @@ cbreak();
 
 	for(;;)
 	{
-        char key;
-            key = getch();
-//short delay, not works
-//	    usleep(9999);
+        uint_fast16_t key;
+            keypad(stdscr,1); //bf=TRUE, read man keypad, man ncurses
+            key = wgetch(stdscr); //read man wgetch
 //HOW USE KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT fron getch(), read man getch
 //NUMPAD support
-//better use case
-           switch(key)
-           {
-               case 'w':
+                 if (key==KEY_UP|| key == 'w'||key=='8') //not call has_key everytime;
+                  {
                   t[ME_TANK].ride=1;
                   t[ME_TANK].ort=U_NORTH;
                             fpc_sleep = 1;
-                   break;
-
-                case 'a':
+                   }
+                 else if (key==KEY_LEFT || key == 'a'||key=='4')
+                    {
                     t[ME_TANK].ride=1;
                     t[ME_TANK].ort=U_WEST;
                             fpc_sleep = 1;
-                   break;
+                     }
 
-               case 's':
+                else if (key==KEY_DOWN||key=='s'||key=='2')
+                    {
                     t[ME_TANK].ride=1;
                     t[ME_TANK].ort=U_SOUTH;
                             fpc_sleep = 1;
-                break;
-
-           // if(key == 'd' || key == KEY_RIGHT)
-                case 'd':
+                    }
+                else if (key==KEY_RIGHT||key=='d'||key=='6')
+                    {
                     t[ME_TANK].ride=1;
                     t[ME_TANK].ort=U_EAST;
                             fpc_sleep = 1;
-                  break;
-	        //better read this separate from arrow keys;
-                 case ' ':
-                num_of_boom_me += 1;
+                    }
+	        //better read this separate from arrow keys
+               else if (key==' '||key=='5'||key=='0') //KEY_ENTER not works;
+                                                    //you can't ride and shoot at the same time yet :( ;
+               {
+                num_of_boom_me++;
                 b_me[num_of_boom_me].ort=t[ME_TANK].ort;
                 b_me[num_of_boom_me].me_x=t[ME_TANK].me_x;
                 b_me[num_of_boom_me].me_y=t[ME_TANK].me_y;
@@ -180,19 +178,15 @@ cbreak();
                   }
                 b_me[num_of_boom_me].live=1;
                             fpc_sleep = 1;
-		    break;
-
-                   //case '0':
+                   }
                    //how to exit?
-                   //break;
-               }//end of switch for reading keyboard
             key = '\0';
 
 			uint_fast8_t kills = 0;
 
 			if(! t[0].live)
 			{
-//should be better move it to canvas.c
+//should be better move it to canvas.c : print_game_over();
                 cbreak();
 				getch();
 
@@ -202,6 +196,7 @@ cbreak();
                 mvaddstr(12,1,"                     TO RESPAWN 1                 ");
                 refresh();
                 sleep(1);
+                print_canvas(); //print canvas before respawn
 
                 for(uint_fast8_t i = 0; i <= 254; i++) //what is 254?
                 {
