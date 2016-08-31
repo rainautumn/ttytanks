@@ -11,7 +11,7 @@
 
 #include "canvas.h"
 
-void print_startpage() //this is not rendered, just printed;
+void print_startpage(void) //this is not rendered, just printed;
 {
 	       //mvaddstr(y,x,"string");
         mvaddstr( 3,1,"                                                        OO            ");
@@ -26,7 +26,7 @@ void print_startpage() //this is not rendered, just printed;
 	mvaddstr(14,1,"    0 Exit                                                            ");
 }
 
-void print_canvas() //USE THIS FUNCTION BEFORE EVERY GAME
+void print_canvas(void) //USE THIS FUNCTION BEFORE EVERY GAME
 {
 //H_GAME was 20
 //W_GAME was 70
@@ -58,7 +58,7 @@ mvaddstr(20,0,"|                                                                
 mvaddstr(21,0,"|----------------------------------------------------------------------|"); //bottom border
 mvaddstr(22,0,"|FRAGS:                                                                 ");
 }
-void print_help()
+void print_help(void)
 {
 print_canvas();
 
@@ -68,7 +68,7 @@ print_canvas();
  mvaddstr(7,1,"    space/5/0                      - Fire                 ");
  mvaddstr(8,1,"    CTRL+C                         - Exit game            ");
 mvaddstr(10,1," How to play:                                             ");
-mvaddstr(11,1,"  For better user experience use square or almost squere  ");
+mvaddstr(11,1,"  For better user experience use square or almost square  ");
 mvaddstr(12,1," font in your terminal, in vt for example you need use    ");
 mvaddstr(13,1," '$ setfont <font name>', list of fonts located in        ");
 mvaddstr(14,1," /usr/share/consolefonts/, you can use same bitmap font in");
@@ -77,7 +77,7 @@ mvaddstr(19,1,"  Press any key to exit                                   ");
 
 getch();
 }
-void print_about()
+void print_about(void)
 {
   print_canvas();
 
@@ -93,7 +93,7 @@ void print_about()
 
  getch();
 }
-void print_setting_main()
+void print_setting_main(void)
 {
  for(;;)
     {

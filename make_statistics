@@ -1,0 +1,12 @@
+#!/bin/bash
+target=ttytanks
+gprof *_${target} > statistics/functions
+
+
+gcov -a -b -c '-f' '-u' lightsources/render.c -o objects/ > statistics/render
+gcov -a -b -c '-f' '-u' lightsources/canvas.c -o objects/ > statistics/canvas
+gcov -a -b -c '-f' '-u' lightsources/multiplayer.c -o objects/ > statistics/multiplayer
+gcov -a -b -c '-f' '-u' lightsources/core.c -o objects/ > statistics/core
+gcov -a -b -c '-f' '-u' lightsources/main.c -o objects/ > statistics/main
+
+mv *.gcov statistics/

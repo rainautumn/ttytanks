@@ -18,3 +18,11 @@
 17. Add levels/maps (Now it counts bot's statistic as well as your)
 18. Add Musik,Sound effects
 19. Add manual page
+20. Fix control delay (wariable with key bihaves like stack, or in core.c loop repeats depending on how much characters were inputed, not on which key was pressed and how long), test 
+it with adding delay to loop with input listening.
+21. Add ability to quit the game
+22. Edit boom_render, it's terrible function, ugly ugly code, it's executed 96% of game, a lot of lines written twice,
+23. Edit tank_reswap, I can't change orientation of tanks.
+24. Edit Exit from game, terminal after exit crashes;
+25. Maybe better use functional approach instead of OOP? for example moveUp(tank[n]) instead of tank_render(tank);
+26. Move make_precompilled make_statistics to Makefile

@@ -1,0 +1,9 @@
+1. gprof and gde (GNU Profiler and GNU Debugger) integration in Makefile (ODEBUG variable for debugging), and OGAME for user.
+2. Fixed boolet deleting
+3. Removed old comments
+4. Added debuging options to Makefile
+5. Added GNU Profiler (gprof) and GNU Coverage Testing Tool (gcov)
+6. Added make_statistics script for using gprof and gcov
+7. Fixed shooting of my_tank, now it don't shoot in walls.
+8. .o files moved to objects/
+9. Added statistics directory with statistics of usage functions, lines of code etc. Use ./make_statistics script 
