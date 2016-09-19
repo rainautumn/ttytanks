@@ -35,7 +35,7 @@ S 1.1
 ```bash
 $ git clone https://github.com/rainautumn/ttytanks.git
 $ cd ttytanks
-$ make && ./ttytanks
+$ make static && ./static_ttytanks
 ```
 ### install ncurces lib
 ###### deb* linux
